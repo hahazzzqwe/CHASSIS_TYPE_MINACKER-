@@ -15,7 +15,6 @@
 #include "global.h"
 #include "adc.h"
 #include "pwm_servo.h"
-#include "serial_servo.h"
 #include "FlashSave_porting.h"
 
 #define PWM_SERVO_DEV_MAX  2200
@@ -43,26 +42,14 @@ void button_event_callback(ButtonObjectTypeDef *button,  ButtonEventIDEnum event
     if(button == buttons[0]) { /* 按键1的事件  */
         if(event == BUTTON_EVENT_CLICK) {	//若为单击
 			
-			//底盘类型
-			if( CHASSIS_TYPE_JETACKER == Chassis_run_type )
-			{
-				Chassis_run_type = CHASSIS_TYPE_MINACKER;
-				buzzer_count = 2;
-			}else{
-				Chassis_run_type = CHASSIS_TYPE_JETACKER;
-				buzzer_count = 1;
-			}
-			//重新初始化底盘
+			Chassis_run_type = CHASSIS_TYPE_MINACKER;
+			buzzer_count = 2;
 			set_chassis_type(Chassis_run_type);
-			
-			//进入中断级代码临界区
-			uint32_t ret = taskENTER_CRITICAL_FROM_ISR(); 
-			//写入Flash
+
+			uint32_t ret = taskENTER_CRITICAL_FROM_ISR();
 			hw_flash_write(SAVE_ADD,&Chassis_run_type,1);
-			//退出中断级代码临界区
 			taskEXIT_CRITICAL_FROM_ISR(ret);
-			//鸣响
-			buzzer_didi(buzzers[0], 1800, 100, 200, buzzer_count);	//蜂鸣器响，提示底盘类型
+			buzzer_didi(buzzers[0], 1800, 100, 200, buzzer_count);
         }
     }
 	if(button == buttons[1]) { /* 按键2的事件  */
@@ -77,9 +64,6 @@ void button_event_callback(ButtonObjectTypeDef *button,  ButtonEventIDEnum event
 
 
 void send_type(ChassisTypeEnum chassis_type);
-
-//大阿克曼车控制函数
-void jetacker_control(void);
 
 //小阿克曼车控制函数
 void minacker_control(void);
@@ -98,8 +82,7 @@ void app_task_entry(void *argument)
 
 	/* Flash读取类型 */
 	hw_flash_Read(SAVE_ADD,&Chassis_run_type,1);
-	if( CHASSIS_TYPE_MINACKER != Chassis_run_type && 
-				CHASSIS_TYPE_JETACKER != Chassis_run_type )
+	if( CHASSIS_TYPE_MINACKER != Chassis_run_type )
 	{
 		Chassis_run_type = CHASSIS_TYPE_MINACKER;  //设置为小阿克曼
 		hw_flash_write(SAVE_ADD,&Chassis_run_type,1);
@@ -137,34 +120,15 @@ void app_task_entry(void *argument)
 	
 	osDelay(2000);
 	
-	switch(Chassis_run_type)
-	{
-		case CHASSIS_TYPE_JETACKER:
-			buzzer_count = 1;
-			break;
-		case CHASSIS_TYPE_MINACKER:
-			buzzer_count = 2;
-			break;
-	}
+	buzzer_count = 2;
 	buzzer_didi(buzzers[0], 1800, 100, 200, buzzer_count);	//蜂鸣器响，提示底盘类型
 	
 	chassis->stop(chassis); //停止
 	
 	
 	//底盘控制函数
-	switch(Chassis_run_type)
-	{
-		case CHASSIS_TYPE_JETACKER: //大阿克曼
-			printf("Jetacker\n");
-			jetacker_control();
-			break;
-		case CHASSIS_TYPE_MINACKER: //小阿克曼
-			printf("Minacker\n");
-			minacker_control();
-			break;
-		default:
-			break;
-	}
+	printf("Minacker\n");
+	minacker_control();
 
 	// 循环  : RTOS任务中的循环，必须要有osDelay或者其他系统阻塞函数，否则会导致系统异常
     for(;;) {
@@ -173,56 +137,6 @@ void app_task_entry(void *argument)
     
 	}
 }
-
-/* 
-*  大阿克曼底盘控制函数
-*/
-void jetacker_control(void)
-{
-    //定义电机运动速度
-    //建议范围为 [50 , 450]
-    static float speed = 300.0f;    
-	
-	//以x轴 speed 的线速度 运动（即向前运动）
-	chassis->set_velocity(chassis, speed, 0, 0);
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-	
-	chassis->set_velocity(chassis, -speed, 0, 0); //向后运动
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-	
-	//以x轴 speed 的线速度，绕自身左边的半径500mm圆做转圈运动
-	chassis->set_velocity_radius(chassis, speed, 500, true);
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-	
-	//以x轴 speed 的线速度，绕自身左边的半径500mm圆做转圈运动
-	chassis->set_velocity_radius(chassis, -speed, 500, true);
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-	
-	chassis->set_velocity_radius(chassis, speed, -500, true);
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-	
-	chassis->set_velocity_radius(chassis, -speed, -500, true);
-	osDelay(2000); //延时2s
-	
-	chassis->stop(chassis); //停止
-	osDelay(1000); //延时1s
-}
-
 
 /* 
 *  小阿克曼底盘控制函数
@@ -272,4 +186,3 @@ void minacker_control(void)
 	chassis->stop(chassis); //停止
 	osDelay(1000); //延时1s
 }
-

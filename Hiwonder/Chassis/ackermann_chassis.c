@@ -26,35 +26,6 @@ float ackermann_velocity_difference(AckermannChassisTypeDef *self,int size,float
 	return v2;
 }
 
-//jetacker
-void jetacker_chassis_move(AckermannChassisTypeDef *self, float vx, float r )
-{
-	float vr = 0 , vl = 0;
-	float angle = 0;
-	if(r != 0)
-	{
-		angle = atan(self->shaft_length/r);
-		vl = vx/r * (r - self->wheelbase/2);
-		vr = vx/r * (r + self->wheelbase/2);
-	}else{ //r == 0 直走
-		angle = 0;
-		vr = vx;
-		vl = vx;
-	}
-	vr = linear_speed_to_rps(self , vr); //求右轮线速度
-	vl = linear_speed_to_rps(self , vl); //求左轮线速度
-	if(angle > PI/6)
-	{
-		angle = PI/6;
-	}else if(angle < -PI/6)
-	{
-		angle = -PI/6;
-	}
-	angle = 1000/(4*PI/3) * angle + 500; //求转向角
-	self->set_motors(self , vl , vr , angle);
-}
-
-//minacker
 void minacker_chassis_move(AckermannChassisTypeDef *self, float vx, float r )
 {
 	float vr = 0 , vl = 0;
@@ -82,23 +53,6 @@ void minacker_chassis_move(AckermannChassisTypeDef *self, float vx, float r )
 	self->set_motors(self , vl , vr , angle);
 }
 
-static void jetacker_stop(void *self)
-{
-    ((AckermannChassisTypeDef*)self)->set_motors(self, 0, 0,500);
-}
-
-
-static void jetacker_set_velocity(void *self, float vx, float vy, float r)
-{
-    jetacker_chassis_move(self, vx, r);
-}
-
-
-static void jetacker_set_velocity_radius(void* self, float linear, float r,bool swerve)
-{
-		jetacker_chassis_move(self, linear, r);
-}
-
 static void minacker_stop(void *self)
 {
     ((AckermannChassisTypeDef*)self)->set_motors(self, 0, 0,1500);
@@ -115,16 +69,8 @@ static void minacker_set_velocity_radius(void* self, float linear, float r,bool 
 }
 
 void ackermann_chassis_object_init(AckermannChassisTypeDef *self){
-	if(self->base.chassis_type == CHASSIS_TYPE_JETACKER)
-	{
-		self->base.stop = jetacker_stop;
-		self->base.set_velocity = jetacker_set_velocity;
-		self->base.set_velocity_radius = jetacker_set_velocity_radius;
-	}else{
-		self->base.stop = minacker_stop;
-		self->base.set_velocity = minacker_set_velocity;
-		self->base.set_velocity_radius = minacker_set_velocity_radius;
-	}
+	self->base.stop = minacker_stop;
+	self->base.set_velocity = minacker_set_velocity;
+	self->base.set_velocity_radius = minacker_set_velocity_radius;
 }
-
 

@@ -3528,54 +3528,6 @@
     </File>
     <File>
       <GroupNumber>19</GroupNumber>
-      <FileNumber>264</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Hiwonder\Chassis\differential_chassis.c</PathWithFileName>
-      <FilenameWithoutPath>differential_chassis.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>19</GroupNumber>
-      <FileNumber>265</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Hiwonder\Chassis\differential_chassis.h</PathWithFileName>
-      <FilenameWithoutPath>differential_chassis.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>19</GroupNumber>
-      <FileNumber>266</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Hiwonder\Chassis\mecanum_chassis.c</PathWithFileName>
-      <FilenameWithoutPath>mecanum_chassis.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>19</GroupNumber>
-      <FileNumber>267</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Hiwonder\Chassis\mecanum_chassis.h</PathWithFileName>
-      <FilenameWithoutPath>mecanum_chassis.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>19</GroupNumber>
       <FileNumber>268</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
