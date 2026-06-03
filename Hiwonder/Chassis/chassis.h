@@ -5,7 +5,7 @@
 typedef enum {
 	CHASSIS_TYPE_START = 0x00,
 
-	CHASSIS_TYPE_MINACKER = 0x06,
+	CHASSIS_TYPE_MINACKER = 0x06, /* 保留历史编号，兼容Flash存储 */
 
 	CHASSIS_TYPE_NONE = 0x07
 }ChassisTypeEnum;

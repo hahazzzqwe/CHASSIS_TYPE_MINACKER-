@@ -22,13 +22,13 @@ ChassisTypeDef *chassis = (ChassisTypeDef*)&minacker;
 
 void chassis_init(void)
 {
+	ackermann_chassis_object_init(&minacker);
     minacker.base.chassis_type = CHASSIS_TYPE_MINACKER;
     minacker.correction_factor = MINACKER_CORRECITION_FACTOR;
     minacker.wheel_diameter = MINACKER_WHEEL_DIAMETER;
     minacker.shaft_length = MINACKER_SHAFT_LENGTH;
     minacker.wheelbase = MINACKER_WHEELBASE;
     minacker.set_motors = minacker_set_motors;
-	ackermann_chassis_object_init(&minacker); //�ṹ���ʼ���ź���
 
 }
 
